@@ -1,4 +1,4 @@
-package com.korea.db.controller;
+package com.korea.tier.controller;
 
 import java.util.List;
 
@@ -7,38 +7,44 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.view.RedirectView;
 
-import com.korea.db.mapper.ProductMapper;
-import com.korea.db.vo.ProductVO;
+import com.korea.tier.mapper.ProductMapper;
+import com.korea.tier.service.ProductService;
+import com.korea.tier.vo.ProductVO;
 
 import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor // 생성자 주입을 위한 어노테이션
+@RequestMapping("/product/*") //product 폴더 안에 잇는 모든 파일
 public class ProductController {
 
-	@Autowired
-	private final ProductMapper productMapper;
-
+//	@Autowired
+//	private final ProductMapper productMapper;
+	
+	//interface
+	private final ProductService productService;
+	
 	@GetMapping("register")
 	public String register(Model model) {
 		model.addAttribute("productVO", new ProductVO());
-		return "product-register";
+		return "product/product-register";
 	}
 
 	@PostMapping("register")
 	public RedirectView register(ProductVO productVO) {
 		System.out.println(productVO.getProductName());
-		productMapper.insert(productVO);
-		return new RedirectView("list");
+		productService.register(productVO);
+		return new RedirectView("product/list");
 	}
 	
 	@GetMapping("list")
 	public String list(Model model) {
-		List<ProductVO> list = productMapper.select(); 
+		List<ProductVO> list = productService.getList(); 
 		model.addAttribute("list", list);
 		
-		return "product-list";
+		return "product/product-list";
 	}
 }

@@ -15,3 +15,19 @@ mapper.xml
 <mapper namespace="">
 	
 </mapper>
+
+--------------------------------------------
+새 프로젝트를 만들면 가져와야 하는 것
+1. application.yml
+2. src/main/java 안에 vo, mapper, mybatis, controller package 만들고 안에 내용물 복붙
+3. src/main/resources 안에 config, mapper package 만들고 안에 내용물 복붙
+4. 복붙해온 xml 파일의 경로 설정 잡아주기
+--------------------------------------------
+1. 테이블 만들기
+2. vo 만들기 @data
+3. dao 만들기 @repository @requiredargsconstructor
+    - 해당하는 mapper를 생성자로 받기
+4. service 패키지 만들고 service Interface 만들기
+5. 해당 service Interface를 구현할 implements class 만들기 @service @requiredargsconstructor
+    - 해당하는 dao를 생성자로 받기
+6. controller에서 해당 service interface를 객체 받기

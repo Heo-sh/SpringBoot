@@ -25,6 +25,7 @@ mapper.xml
 --------------------------------------------
 1. 테이블 만들기
 2. vo 만들기 @data
+    - vo에 해당하는 mapper interface 만들기 @mapper
 3. dao 만들기 @repository @requiredargsconstructor
     - 해당하는 mapper를 생성자로 받기
 4. service 패키지 만들고 service Interface 만들기

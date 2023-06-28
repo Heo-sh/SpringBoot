@@ -12,4 +12,10 @@
 	<select id="select" resultType="productVO">
 		select * from product order by product_id desc
 	</select>
+	
+	<update id="updateStock">
+		update product
+		set product_stock = product_stock - #{productCount}
+		where product_id = #{productId}
+	</update>
 </mapper>

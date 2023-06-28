@@ -3,28 +3,121 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>Insert title here</title>
+		<style>
+			div {
+				margin: 0 auto;
+				width: 1000px;
+			}
+			table {
+				width: 100%;
+				text-align: center;
+			}
+			button {
+				width: 50%;
+			}
+			.productCount {
+				border-style: none;
+			}
+			.productCount:focus {
+				outline: none;
+			}
+		</style>
 	</head>
 	<body>
-		<table border="1">
-			<tr>
-				<th>상품 번호</th>
-				<th>상품 이름</th>
-				<th>상품 재고</th>
-				<th>상품 가격</th>
-				<th>등록 날짜</th>
-				<th>수정 날짜</th>
-			</tr>
-			<!--th:block -> 블록태그로 처리-->
-			<th:block th:each="product : ${list}">
-				<tr th:object="${product}">
-					<td th:text="*{productId}"></td>
-					<td th:text="*{productName}"></td>
-					<td th:text="*{productStock}"></td>
-					<td th:text="*{productPrice}"></td>
-					<td th:text="*{registerDate}"></td>
-					<td th:text="*{updateDate}"></td>
+		<div>
+			<table border="1">
+				<tr>
+					<th>단일 선택</th>
+					<th>주문 개수</th>
+					<th>상품 번호</th>
+					<th>상품 이름</th>
+					<th>상품 재고</th>
+					<th>상품 가격</th>
+					<th>등록 날짜</th>
+					<th>수정 날짜</th>
 				</tr>
-			</th:block>
-		</table>	
+				<!--th:block -> 블록태그로 처리-->
+				<th:block th:each="product : ${list}">
+					<tr th:object="${product}">
+						<td>
+							<input type="radio" name="productId" th:value="*{productId}">
+						</td>
+						<td>
+							<input type="text" class="productCount" readonly>
+						</td>
+						<td th:text="*{productId}"></td>
+						<td th:text="*{productName}"></td>
+						<td th:text="*{productStock}"></td>
+						<td th:text="*{productPrice}"></td>
+						<td th:text="*{registerDate}"></td>
+						<td th:text="*{updateDate}"></td>
+					</tr>
+				</th:block>
+			</table>
+			<button type="button" id="order-done">주문 완료</button><button type="button" onclick="location.href='/order/order-list'">주문 내역</button>	
+		</div>
+		<form th:action="@{/order/done}" method="get" name="order-form">
+			<input type="hidden" name="productId">
+			<input type="hidden" name="productCount">
+		</form>
 	</body>
+	<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+	<script>
+		const $radios = $("input[type='radio']"); //input 태그 중 type 속성이 radio인 모든 태그 선택
+		const $inputs = $("input[class='productCount']"); //input 태그 중 class 속성이 productCount인 모든 태그 선택
+		const $done = $("#order-done"); //id속성이 order-done인 요소 선택
+		const $form = $("form[name='order-form']"); //name속성이 order-form인 form태그 선택
+		let $temp, i; //$temp: 임시로 사용할 변수, i: 선택된 radio 버튼의 index 값을 저장
+		
+		$radios.on("click", function() { //radio버튼의 click event를 처리할 함수
+			i = $radios.index(this); //변수 i에 선택한 radio버튼의 index값을 저장
+			console.log($temp);
+			
+			if ($temp) { //undefined는 false로 인식
+				//변수를 사용하여 이전에 선택된 입력 필드를 확인하고, readonly 속성을 true로 설정하여 읽기 전용으로 변경
+				$temp.prop("readonly", true); 
+				$temp.val("");
+			}
+			
+			//click된 radio button에 해당하는 입력 필드를 선택하고, readonly 속성을 false로 설정하여 편집이 가능한 상태로 만든다.
+			$inputs.eq(i).prop("readonly", false); 
+			
+			$temp = $inputs.eq(i); //$temp 변수에 선택된 입력필드를 저장
+		});
+		
+		$done.on("click", function() { //order-done button의 click event를 처리하는 함수
+			if (i == 0) {
+				i = '0';
+			}
+			if(i) {
+				//form 내에서 name이 'productId'인 input 태그를 선택하고, 선택된 radio button의 값을 준다.
+				$form.find("input[name='productId']").val($radios.eq(i).val());
+				//form 내에서 name이 'productCount'인 input 태그를 선택하고, 선택된 입력필드의 값을 준다.
+				$form.find("input[name='productCount']").val($inputs.eq(i).val());
+				
+				console.log($form.find("input[name='productId']").val($radios.eq(i).val()));
+				console.log($form.find("input[name='productCount']").val($inputs.eq(i).val()));
+				
+				$form.submit();
+			}
+		});
+	</script>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

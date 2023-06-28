@@ -30,14 +30,14 @@ public class ProductController {
 	@GetMapping("register")
 	public String register(Model model) {
 		model.addAttribute("productVO", new ProductVO());
-		return "product/product-register";
+		return "product/product-register"; //html경로
 	}
 
 	@PostMapping("register")
 	public RedirectView register(ProductVO productVO) {
 		System.out.println(productVO.getProductName());
 		productService.register(productVO);
-		return new RedirectView("product/list");
+		return new RedirectView("/product/list"); //mapping을 한 경로: 무조건 앞에 "/"를 붙여줘야 한다.
 	}
 	
 	@GetMapping("list")

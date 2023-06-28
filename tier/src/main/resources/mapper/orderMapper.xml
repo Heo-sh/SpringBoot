@@ -7,4 +7,8 @@
 		INSERT INTO "ORDER" (ORDER_ID, PRODUCT_ID, PRODUCT_COUNT)
 		VALUES(seq_order.nextval, #{productId}, #{productCount})
 	</insert>
+	
+	<select id="select">
+		select * from "ORDER" order by order_id asc
+	</select>
 </mapper>

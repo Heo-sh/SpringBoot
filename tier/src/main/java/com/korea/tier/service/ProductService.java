@@ -10,4 +10,5 @@ public interface ProductService {
 	public List<ProductVO> getList();
 	//상품 추가
 	public void register(ProductVO productVO);
+	
 }

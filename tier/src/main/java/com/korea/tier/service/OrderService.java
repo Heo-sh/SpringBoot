@@ -1,5 +1,7 @@
 package com.korea.tier.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.korea.tier.dao.OrderDAO;
@@ -23,7 +25,12 @@ public class OrderService {
 
 	//주문하기 & 재고 수정
 	public void order(OrderVO orderVO) {
-		orderDAO.save(orderVO);
-		productDAO.setProductStock(orderVO);
+		orderDAO.save(orderVO); //주문
+		productDAO.setProductStock(orderVO); //상품 재고 수정
+	}
+	
+	//조회하기
+	public List<OrderVO> findAll() {
+		return orderDAO.findAll();
 	}
 }

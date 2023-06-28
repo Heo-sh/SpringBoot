@@ -10,7 +10,7 @@
 	</insert>
 	
 	<select id="select" resultType="productVO">
-		select * from product order by product_id desc
+		select * from product product_id
 	</select>
 	
 	<update id="updateStock">

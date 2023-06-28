@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import com.korea.tier.vo.OrderVO;
 import com.korea.tier.vo.ProductVO;
 
-@Mapper
+@Mapper //DB랑의 연결담당
 public interface ProductMapper {
 	
 	//상품 추가

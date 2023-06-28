@@ -23,7 +23,7 @@ mapper.xml
 3. src/main/resources 안에 config, mapper package 만들고 안에 내용물 복붙
 4. 복붙해온 xml 파일의 경로 설정 잡아주기
 --------------------------------------------
-1. 테이블 만들기
+1. 테이블 만들기                    
 2. vo 만들기 @data
     - vo에 해당하는 mapper interface 만들기 @mapper
 3. dao 만들기 @repository @requiredargsconstructor

@@ -1,5 +1,7 @@
 package com.korea.tier.dao;
 
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 import com.korea.tier.mapper.OrderMapper;
@@ -17,4 +19,9 @@ public class OrderDAO {
 	public void save(OrderVO orderVO) {
 		orderMapper.insert(orderVO);
 	}
+	
+	//조회하기
+	public List<OrderVO> findAll() {
+		return orderMapper.select();
+	};
 }

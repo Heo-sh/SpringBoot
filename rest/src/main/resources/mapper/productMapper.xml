@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0/EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace는 기존의 별칭이 아닌 interface가 있는 경로를 적어주어야 한다.-->
+<mapper namespace="com.korea.rest.mapper.ProductMapper">
+	<insert id="insert">
+		<!--항상 ;을 붙였는지 확인할 것-->
+		INSERT INTO PRODUCT (PRODUCT_ID, PRODUCT_NAME, PRODUCT_STOCK, PRODUCT_PRICE)
+					VALUES(seq_product.nextval, #{productName}, #{productStock}, #{productPrice})
+	</insert>
+	
+	<select id="select" resultType="productVO">
+		select * from product product_id
+	</select>
+	
+	<update id="updateStock">
+		update product
+		set product_stock = product_stock - #{productCount}
+		where product_id = #{productId}
+	</update>
+</mapper>

@@ -4,6 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.korea.tier.service.OrderService;
@@ -37,9 +38,13 @@ public class OrderController {
 		return new RedirectView("/product/list");
 	}
 	
-	@GetMapping("order-list")
-	public String o_list(Model model) {
-		model.addAttribute("list", orderservice.findAll());
+	@GetMapping("list")				//@RequestParam(required = false): 해당 파라미터의 null값을 허용하겠다.
+	public String list(Model model, @RequestParam(required = false)String sort) {
+		if (sort == null) {
+			sort = "recent";
+		}
+		model.addAttribute("sort", sort);
+		model.addAttribute("orders", orderservice.getList(sort));
 		return "order/order-list";
 	}
 }

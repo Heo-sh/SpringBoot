@@ -2,7 +2,7 @@
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0/EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!--namespace는 기존의 별칭이 아닌 interface가 있는 경로를 적어주어야 한다.-->
-<mapper namespace="com.korea.tier.mapper.OrderMapper">
+<mapper namespace="com.korea.rest.mapper.OrderMapper">
 	<insert id="insert">
 		INSERT INTO "ORDER" (ORDER_ID, PRODUCT_ID, PRODUCT_COUNT)
 		VALUES(seq_order.nextval, #{productId}, #{productCount})

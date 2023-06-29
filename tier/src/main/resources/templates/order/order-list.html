@@ -3,23 +3,91 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>Insert title here</title>
+		<style>
+			span {
+				cursor: pointer;
+			}
+			.on {
+				font-weight: bolder;
+			}
+			#container {
+				margin: 0 auto;
+				width: 1000px;			
+			}
+			table {
+				width: 100%;
+			}
+			button {
+				width: 100%;
+			}
+		</style>
 	</head>
 	<body>
-		<table border="1">
-			<tr>
-				<th>주문 번호</th>
-				<th>상품 주문 번호</th>
-				<th>상품 주문 수량</th>
-				<th>주문 일자</th>
-			</tr>
-			<th:block th:each="order : ${list}">
-				<tr th:object="${order}">
-					<td th:text="*{orderId}"></td>
-					<td th:text="*{productId}"></td>
-					<td th:text="*{productCount}"></td>
-					<td th:text="*{orderDate}"></td>
+		<div id="container">
+			<div class="sort">
+				<span class="on" id="recent" data-sort="recent">최신순</span>
+				<span class="" id="money" data-sort="money">결제금액순</span>
+			</div>
+			<table border="1">
+				<tr>
+					<th>상품 이름</th>
+					<th>상품 가격</th>
+					<th>주문 개수</th>
+					<th>결제 금액</th>
+					<th>주문 날짜</th>
 				</tr>
-			</th:block>
-		</table>
+									<!--controller에서 받아오는 list-->
+				<th:block th:each="order : ${orders}">
+					<tr th:object="${order}">
+						<td th:text="*{productName}"></td>
+						<td th:text="*{productPrice}"></td>
+						<td th:text="*{productCount}"></td>
+						<td th:text="*{orderPrice}"></td>
+						<td th:text="*{orderDate}"></td>
+					</tr>
+				</th:block>
+			</table>
+			<button type="button" onclick="location.href='/product/list'">상품목록</button>
+		</div>
 	</body>
+	<!--span태그를 눌렀을 시 해당하는 기능 구현-->
+	<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+	<script th:inline="javascript"> //javascript에서 쓰기위함
+		//주석처리를 풀어서 사용가능 대신 "recent"를 지워야함
+		let sort = /*[[${sort}]]*/"recent"; //thymeleaf: controller에서 최초로 들어온 sort가 null값일 때 recent를 받아서 온 것
+		const $spans = $("div.sort span"); //sort라는 클래스를 가진 div 태그 안의 span태그들을 검색
+		
+		$("span").attr("class", ""); //아무 것도 안 쓰여있는 span 태그의 class를 비워두어라
+		//$("span#" + sort): span태그의 id에 sort 데이터를 붙이는 것이 아닌 sort 데이터 recent or money인지를 찾아라는 명령어
+		$("span#" + sort).attr("class", "on"); //id가 recent or money인 span 태그의 class를 on으로 바꿔라: 클릭된 것을 보여주기 위해서
+		
+		$spans.on("click", function() {
+			//클릭한 span의 데이터를 파라미터로 보낸다.          data("sort"): data-sort
+			console.log(sort);
+			location.href = `/order/list?sort=${$(this).data("sort")}`;
+		})		
+	</script>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

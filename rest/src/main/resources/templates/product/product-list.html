@@ -26,11 +26,36 @@
 			}
 			.register-wrap {
 				display: none;
+				width: 500px;
+			}
+			.register-wrap div {
+				width: 100%;
+			}
+			.register-wrap div input {
+				width: auto;
+			}
+			.register-done {
+				width: 100%;
+			}
+			span {
+				cursor: pointer;
+			}
+			.on {
+				font-weight: bolder;
+			}
+			#container {
+				margin: 0 auto;
+				width: 1000px;
+				display: none;			
+			}
+			.sort {
+				text-align: right;
 			}
 		</style>
 	</head>
 	<body>
 		<div>
+			<!--상품 추가-->
 			<button type="button" class="register-ready">상품 추가</button>
 			<div class="register-wrap" th:object="${productForm}">
 				<div>
@@ -46,6 +71,7 @@
 				<input type="button" class="register-done" value="등록" >				
 			</div>
 			
+			<!--상품 목록-->
 			<table border="1">
 				<tr>
 					<th>단일 선택</th>
@@ -75,18 +101,50 @@
 					</tr>
 				</th:block>
 			</table>
-			<button type="button" id="order-done">주문 완료</button><button type="button" onclick="location.href='/order/list'">주문 내역</button>	
+			<button type="button" id="order-done">주문 완료</button><button type="button" id="order-list">주문 내역</button>	
 		</div>
-		<form th:action="@{/order/done}" method="get" name="order-form">
+		
+		<!--주문 내역-->
+		<div id="container">
+			<div class="sort">
+				<span class="on" id="recent" data-sort="recent">최신순</span>
+				<span class="" id="money" data-sort="money">결제금액순</span>
+			</div>
+			<!--ajax로 받은 order-list가 들어올 div-->
+			<div class="order-list"></div>
+<!--			테이블 부분을 JS에 집어 넣을 것
+			<table border="1">
+				<tr>
+					<th>상품 이름</th>
+					<th>상품 가격</th>
+					<th>주문 개수</th>
+					<th>결제 금액</th>
+					<th>주문 날짜</th>
+				</tr>
+									${orders}: controller에서 받아오는 list
+				<th:block th:each="order : ${orders}">
+					<tr th:object="${order}">
+						<td th:text="*{productName}"></td>
+						<td th:text="*{productPrice}"></td>
+						<td th:text="*{productCount}"></td>
+						<td th:text="*{orderPrice}"></td>
+						<td th:text="*{orderDate}"></td>
+					</tr>
+				</th:block>
+			</table>
+			테이블 부분을 JS에 집어 넣을 것-->
+		</div>
+		
+		<!--<form th:action="@{/order/done}" method="get" name="order-form">
 			<input type="hidden" name="productId">
 			<input type="hidden" name="productCount">
-		</form>
+		</form>-->
 	</body>
+	
+	<!--script 영역-->
 	<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 	<script>
 		const $radios = $("input[type='radio']"); //input 태그 중 type 속성이 radio인 모든 태그 선택
-		const $inputs = $("input[class='productCount']"); //input 태그 중 class 속성이 productCount인 모든 태그 선택
-		const $done = $("#order-done"); //id속성이 order-done인 요소 선택
 		const $form = $("form[name='order-form']"); //name속성이 order-form인 form태그 선택
 		let $temp, i; //$temp: 임시로 사용할 변수, i: 선택된 radio 버튼의 index 값을 저장
 		
@@ -125,8 +183,8 @@
 	</script>
 	<!--register-ready 버튼을 눌렀을 때 register-wrap 보이게 하기-->
 	<script>
-		const $registerReady = $("button.register-ready");
-		const $registerDone = $("input.register-done");
+		const $registerReady = $("button.register-ready"); //추가하기(layout 열기)
+		const $registerDone = $("input.register-done"); //등록하기
 		const $registerWrap = $("div.register-wrap");
 		
 		$registerReady.on("click", function() {
@@ -137,11 +195,132 @@
 		});
 		
 		$registerDone.on("click", function() {
+			//등록버튼을 누르면 새로고침이 될 것이기에 필요없다.
 			//$(this).hide();
-			$registerWrap.hide();
+			//$registerWrap.hide();
 			//$("div.register-wrap").hide();
-			$registerReady.show();
+			//$registerReady.show();
+			
+			//registerDone을 눌렀을 때 상품 등록하는 기능 추가 Ajax활용
+			// = X -> : O, ; X -> , O
+			$.ajax({
+				url : "new", //url 요청
+				type : "post", //전송방식
+				//JSON.stringify(): data는 원래 객체형태로 전달이 되는데, 보내는 data를 JSON문자열로 변환
+				data : JSON.stringify({productName: $("#productName").val(), 
+									   productStock: $("#productStock").val(),
+									   productPrice: $("#productPrice").val()}),
+				contentType: "application/json; charset=utf-8", //요청 content의 type을 json으로 설정
+				//성공적으로 처리된 경우 실행될 콜백함수
+				success: function() {
+					location.reload(); //현재 페이지를 새로고침
+				}
+			});
+			
 		});
+	</script>
+	<!--order-list를 보여주기 위한 기능 추가-->
+	<script>
+		let sort;
+		//div 요소 내부에 있는 class 속성값이 sort인 모든 span 태그
+		const $spans = $("div.sort span");
+		//id속성에 order-list값이 있는 버튼 선택
+		const $orderList = $("button#order-list");
+		
+		//최신순, 금액순 기능
+		$spans.on("click", function() {
+			$spans.attr("class", ""); //전체 span태그의 class의 값을 비운다.
+			$(this).attr("class", "on"); //누른 애만 class의 값을 on으로 바꾼다.
+			$orderList.click(); //orderList 버튼을 누른다.
+		})
+		
+		//주문내역 버튼을 눌렀을 때
+		$orderList.on("click", function() {
+			//주문내역 테이블이 보이게 하기
+			$("#container").show();
+			$spans.each((i, span) => {
+				//$(span): parameter로 넘어온 span
+				if($(span).attr("class")) { //class에 뭐라도 있는 span 태그의 데이터를 가져와서 빈 sort 변수에 데이터를 집어넣어라
+					sort = $(span).data("sort");
+				}
+			});
+			
+			$("span").attr("class", "");
+			$("span#" + sort).attr("class", "on") //"span#" + sort: span 태그의 id가 money인지 recent인지를 찾아서 class를 on으로 바꾼다.
+			
+			$.ajax({
+				url: "/order/list/" + sort,
+				success: function(orders) {
+					let text = `
+						<table border="1">
+							<tr>
+								<th>상품 이름</th>
+								<th>상품 가격</th>
+								<th>주문 개수</th>
+								<th>결제 금액</th>
+								<th>주문 날짜</th>
+							</tr>
+					`;
+					//controller에서 넘어온 data를 반복문을 통해 text에 넣어주는 코드
+					orders.forEach(order => {
+						text += `
+						<tr>
+							<td>${order.productName}</td>
+							<td>${order.productPrice}</td>
+							<td>${order.productCount}</td>
+							<td>${order.orderPrice}</td>
+							<td>${order.orderDate}</td>
+						</tr>	
+						`;
+					}); //orders.forEach
+					text += `</table>`;
+					
+					//text를 order-list 클래스를 가진 div에 집어넣는 코드
+					$("div.order-list").html(text);
+				}
+			}) //$.ajax
+			//$spans.each()메서드를 사용하여 $span 객체의 각 span 요소에 대한 반복문을 실행
+			//반복문은 index i와 요소 span을 파라미터로 받는 함수를 실행
+			//함수 내에서는 if문을 사용하여 현재 span 태그 요소의 class 속성을 확인
+			//$(span).attr("class")를 통해 span 요소의 class 속성 값을 가져온다.
+			//JS(JavaScript)에서는 숫자타입, 문자열, 배열, 객체가 들어오면 'true'로 간주한다.
+			//만약, class 속성이 존재한다면 $(span).data("sort"): data-sort를 사용하여 span 요소의 sort 데이터 값을 가져온다.
+			//그 값을 sort 변수에 할당
+			
+			//spans.each(function f(i, span) {
+			//	if($(span).attr("class")) {
+			//		sort = $(span).data("sort");
+			//	}
+			//})	
+			//}) 
+		})  
+	</script>
+	<!--주문 완료(orderdone) 버튼 기능-->
+	<script>
+		const $done = $("button#order-done"); //id속성이 order-done인 요소 선택
+		const $inputs = $("input[class='productCount']"); //input 태그 중 class 속성이 productCount인 모든 태그 선택
+		const $ids = $("input[name='productId']");
+	
+		$done.on("click", function() {
+			$.ajax({
+				url: "/order/write",
+				type: "post", //전송방식은 controller의 받는 mapping과 동일해야함, if getmapping이면 안 써줘도 됨.
+				data: JSON.stringify({productId: $ids.eq(i).val(),
+									  productCount: $inputs.eq(i).val()
+				}),
+				contentType: "application/json; charset=utf-8",
+				success: function(products) {
+					$.ajax({
+						url: "/product/" + $ids.eq(i).val(),
+						success: function() {
+							console.log(products.productStock);
+							$($("tr").eq(i + 1).children()).eq(4).text(products.productStock);
+						}
+					});
+					$orderList.click();
+				}
+			}); //$.ajax
+		}) //$done.on		
 	</script>
 </html>
 

@@ -14,8 +14,11 @@ public interface ProductMapper {
 	public void insert(ProductVO productVO);
 	
 	//상품 조회
-	public List<ProductVO> select();
+	public List<ProductVO> selectAll();
 	
 	//상품 재고 수정
 	public void updateStock(OrderVO orderVO);
+	
+	//주문한 상품 조회
+	public ProductVO select(int productId);
 }

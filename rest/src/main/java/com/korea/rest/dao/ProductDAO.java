@@ -20,7 +20,7 @@ public class ProductDAO {
 	
 	//상품 조회
 	public List<ProductVO> findAll() {
-		return productMapper.select();
+		return productMapper.selectAll();
 	}
 	
 	//상품 추가
@@ -31,5 +31,10 @@ public class ProductDAO {
 	//상품 재고 수정
 	public void setProductStock(OrderVO orderVO) {
 		productMapper.updateStock(orderVO);
+	}
+	
+	//주문한 상품 조회
+	public ProductVO getProduct(int productId) {
+		return productMapper.select(productId);
 	}
 }

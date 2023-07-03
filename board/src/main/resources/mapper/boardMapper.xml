@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0/EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace는 기존의 별칭이 아닌 interface가 있는 경로를 적어주어야 한다.-->
+<mapper namespace="com.korea.board.mapper.BoardMapper">
+	
+	<!-- 페이지 별 게시물 조회 -->
+	<select id="selectList" resultType="boardVO">
+		select * from (select rank() over(order by ref desc, step) no, b.* from board b)
+		where no between #{start} and #{end}
+	</select>
+	
+	<!-- 전체 게시물 수 조회 -->
+	<select id="getRowTotal" resultType="int">
+		select count(*) from board
+	</select>
+</mapper>

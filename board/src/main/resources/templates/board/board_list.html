@@ -3,6 +3,11 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>Insert title here</title>
+		<style>
+			table {
+				border-collapse: collapse;
+			}
+		</style>
 	</head>
 	<body>
 		<table border="1" style="width: 700px;">
@@ -53,13 +58,49 @@
 				</tr>
 			</th:block>
 			<tr>
-				<td colspan="5" align="center" th:text="${pageMenu}"></td>
+				<!--<td colspan="5" align="center" th:text="${pageMenu}"></td>-->
+				<!-- jsp가 아니기에 이렇게 사용은 불가 <td colspan="5" align="center">${pageMenu}</td>-->
+				<td colspan="5" align="center">
+					<div id="pageMenu"></div>
+				</td>
 			</tr>
 			<tr>
 				<td colspan="5" align="right">
-					<img src="/img/btn_reg.gif" onclick="location.href='insert_form'" style="cursor: pointer;">
+					<a th:href="@{/board/insert_form(page=${param.page})}">
+						<img src="/img/btn_reg.gif" style="cursor: pointer;">
+					</a>
 				</td>
 			</tr>
 		</table>
 	</body>
+	<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+	<script th:inline="javascript">
+		//pageMenu 변수에 contorller에서 넘어온 pageMenu 담아주기
+		let pageMenu = [[${pageMenu}]]	
+		
+		//pageMenu라는 id를 가진 div에 pageMenu를 넣어줌
+		$("div#pageMenu").html(pageMenu);
+	</script>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 </html>

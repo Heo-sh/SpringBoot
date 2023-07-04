@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<form name="f" th:action="@{/board/insert}" th:object="${boardVO}" method="post">
+		<table border="1">
+			<caption>게시글 작성</caption>
+				<input type="hidden" name="page" th:value="${param.page}">
+				<tr>
+					<th>제목</th>
+					<td>
+						<input type="text" id="subject" th:field="*{subject}">
+					</td>
+				</tr>
+				<tr>
+					<th>작성자</th>
+					<td>
+						<input type="text" th:field="*{name}">
+					</td>
+				</tr>
+				<tr>
+					<th>내용</th>
+					<td>
+						<textarea rows="10" cols="50" th:field="*{content}" style="resize: none;"></textarea>
+					</td>
+				</tr>
+				<tr>
+					<th>비밀번호</th>
+					<td>
+						<input type="password" id="pwd" th:field="*{pwd}">
+					</td>
+				</tr>
+			<tr>
+				<td colspan="2" align="right">
+					<!--등록 버튼-->
+					<img src="/img/btn_reg.gif" id="send_check" style="cursor: pointer;">
+					<!--취소-->
+					<a th:href="@{/board/board_list(page=${param.page})}" style="text-decoration: none;">
+						<img src="/img/btn_back.gif">
+					</a>
+				</td>
+			</tr>
+		</table>
+	</form>
+</body>
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script>
+	const sendBtn = $("img#send_check");
+	
+	const f = $("form[name='f']");
+	
+	sendBtn.on("click", function() {
+		console.log(sendBtn);
+		
+		//$("form[name='f']").submit();
+		//f.submit();
+	})
+</script>
+</html>

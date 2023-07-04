@@ -14,4 +14,34 @@
 	<select id="getRowTotal" resultType="int">
 		select count(*) from board
 	</select>
+	
+	<!-- 한 건의 게시물 조회 -->
+	<select id="selectOne" resultType="boardVO">
+		select * from board where idx = #{idx}
+	</select>
+	
+	<!-- 조회 수 증가 -->
+	<update id="update_readhit">
+		update board
+		set readhit = readhit + 1
+		where idx = #{idx}
+	</update>
+	
+	<!-- 게시물 작성 -->
+	<insert id="insert" parameterType="boardVO">
+		insert into board values(
+			seq_board_idx.nextval,
+			#{name},
+			#{subject},
+			#{content},
+			#{pwd},
+			#{ip},
+			sysdate,
+			0,
+			seq_board_idx.currval,
+			0,
+			0,
+			0
+		)
+	</insert>
 </mapper>

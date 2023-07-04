@@ -6,8 +6,10 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.view.RedirectView;
 
 import com.korea.board.common.Common;
 import com.korea.board.dao.BoardDAO;
@@ -68,8 +70,45 @@ public class BoardController {
 		return "board/board_list";
 	}
 	
+	//한 건의 게시물 조회하기
+	@GetMapping("view")
+	public String view(Model model, int idx, @RequestParam(required = false) String page) {
+		BoardVO vo = boardDAO.selectOne(idx);
+		
+		//조회 수 증가
+		String show = (String)request.getSession().getAttribute("show");
+		
+		if (show == null) {
+			int res = boardDAO.update_readhit(idx);
+			request.getSession().setAttribute("show", "0");
+		}
+		
+		//상세보기 페이지로 전환하기 위해 바인딩 및 포워딩
+		model.addAttribute("vo", vo);
+		
+		return "/board/board_view";
+	}
 	
+	//게시물 작성
+	@GetMapping("insert_form")
+	public String insert_form(Model model, @RequestParam(required = false) String page) {
+		model.addAttribute("boardVO", new BoardVO());
+		return "/board/insert_form";
+	}
 	
+	@PostMapping("insert")
+	public RedirectView insert(BoardVO boardVO, @RequestParam(required = false) String page) {
+		System.out.println(boardVO.getSubject());
+		String ip = request.getLocalAddr();
+		boardVO.setIp(ip);
+		int res = boardDAO.insert(boardVO);
+		
+		if (res > 0) {
+			return new RedirectView("/board/board_list?page=" + page);
+		}
+		
+		return null;
+	}
 	
 	
 	

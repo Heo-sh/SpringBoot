@@ -25,5 +25,20 @@ public class BoardDAO {
 	public int getRowTotal() {
 		return boardMapper.getRowTotal();
 	};
+	
+	//한 건의 게시물 조회
+	public BoardVO selectOne(int idx) {
+		return boardMapper.selectOne(idx);
+	}
+	
+	//조회 수 증가
+	public int update_readhit(int idx) {
+		return boardMapper.update_readhit(idx);
+	}
+	
+	//게시물 등록
+	public int insert(BoardVO boardVO) {
+		return boardMapper.insert(boardVO);
+	}
 
 }

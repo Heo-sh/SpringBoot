@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.korea.board.common.Common;
@@ -108,6 +109,20 @@ public class BoardController {
 		}
 		
 		return null;
+	}
+	
+	//삭제하기
+	@PostMapping("del")
+	@ResponseBody //ajax이니까
+	public void delete(int idx) {
+		System.out.println(idx);
+		BoardVO vo = boardDAO.selectOne(idx);
+		vo.setSubject("이미 삭제된 글입니다.");
+		vo.setName("unknown");
+		
+		System.out.println(vo.getSubject());
+		
+		boardDAO.del_update(vo);
 	}
 	
 	

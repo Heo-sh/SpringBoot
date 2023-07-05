@@ -44,4 +44,13 @@
 			0
 		)
 	</insert>
+	
+	<!-- 게시물 삭제한 것처럼 보이게 하기 -->
+	<update id="del_update">
+		update board
+		set subject = #{subject},
+		name = #{name},
+		del_info = -1
+		where idx = #{idx}
+	</update>
 </mapper>

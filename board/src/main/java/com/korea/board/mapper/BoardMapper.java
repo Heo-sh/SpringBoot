@@ -24,4 +24,7 @@ public interface BoardMapper {
 	
 	//게시물 한 건 등록
 	public int insert(BoardVO boardVO);
+	
+	//게시물 한 건 삭제한 것처럼 보이게 하기
+	public int del_update(BoardVO vo);
 }

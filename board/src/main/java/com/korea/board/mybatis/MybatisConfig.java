@@ -41,6 +41,7 @@ public class MybatisConfig {
 		SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
 		sqlSessionFactoryBean.setDataSource(dataSource());
 		//classpath가 resource까지의 경로를 알고 있다.
+		//vo에서 DB에서 넘어올 data를 담을 변수명에 "_"를 쓰면 안된다.
 		sqlSessionFactoryBean.setMapperLocations(applicationContext.getResources("classpath*:/mapper/*.xml"));
 		sqlSessionFactoryBean.setConfigLocation(applicationContext.getResource("classpath:/config/config.xml"));
 		

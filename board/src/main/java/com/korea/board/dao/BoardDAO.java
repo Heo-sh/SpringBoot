@@ -40,5 +40,10 @@ public class BoardDAO {
 	public int insert(BoardVO boardVO) {
 		return boardMapper.insert(boardVO);
 	}
+	
+	//게시물 삭제한 것처럼 보이기
+	public int del_update(BoardVO vo) {
+		return boardMapper.del_update(vo);
+	}
 
 }
